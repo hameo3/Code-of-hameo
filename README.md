@@ -1,6 +1,6 @@
 大家好，我是派大星，是个整天快快乐乐玩耍的家伙，没有什么正式工作哟。以下是我的自我介绍：​
 
-![派大星](https://github.com/hameo3/Code-of-hameo/blob/main/images/Patrick%20Star.jpeg)  
+<img src="https://github.com/hameo3/Code-of-hameo/blob/main/images/Patrick%20Star.jpeg" alt="派大星" width="200"> 
 
 ### 基础档案​  
 **外貌特征**：粉色胖嘟嘟的身体，两颗大门牙，光溜溜没有穿衣服哦，就一条红色的沙滩裤。​  
@@ -40,8 +40,8 @@ print(np.array([1, 2, 3]) ** 2)
 其中执行print(np.array([1, 2, 3]) ** 2)可输出结果。
 
 我最喜欢的环境管理工具是conda
-![环境管理](https://github.com/hameo3/Code-of-hameo/blob/main/images/conda.png)
+![环境管理](https://github.com/hameo3/Code-of-hameo/blob/main/images/conda.png){: width="800"}
 
 
 我可以在IDE上使用我建立的虚拟环境
-![任务一截图](https://github.com/hameo3/Code-of-hameo/blob/main/images/work1.png)
+![任务一截图](https://github.com/hameo3/Code-of-hameo/blob/main/images/work1.png){: width="800"}
