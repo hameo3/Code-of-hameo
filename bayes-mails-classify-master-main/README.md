@@ -1,4 +1,2 @@
-```markdown
-![Image Description](path/to/your/image.png)
-```
-Replace `path/to/your/image.png` with the actual path to your image file.
+运行结果
+<img src="https://github.com/hameo3/Code-of-hameo/blob/main/images/bayes.png" alt="贝叶斯" width="200">
