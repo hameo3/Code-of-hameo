@@ -5,6 +5,7 @@ from itertools import chain
 from collections import Counter
 import numpy as np
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 # 获取脚本所在目录
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -25,39 +26,57 @@ def get_words(filename):
             words.extend(line)
     return words
 
-all_words = []
-
-def get_top_words(top_num):
-    """遍历邮件建立词库后返回出现次数最多的词"""
-    filename_list = [os.path.join(MAILS_DIR, '{}.txt'.format(i)) for i in range(151)]
-    # 遍历邮件建立词库
-    for filename in filename_list:
-        all_words.append(get_words(filename))
-    # itertools.chain()把all_words内的所有列表组合成一个列表
-    # collections.Counter()统计词个数
+def get_top_words(top_num, all_words):
+    """返回出现次数最多的词"""
     freq = Counter(chain(*all_words))
     return [i[0] for i in freq.most_common(top_num)]
 
-top_words = get_top_words(100)
-# 构建词-个数映射表
-vector = []
-for words in all_words:
-    word_map = list(map(lambda word: words.count(word), top_words))
-    vector.append(word_map)
+def build_features(feature_method, top_num=100):
+    """构建特征向量"""
+    filename_list = [os.path.join(MAILS_DIR, '{}.txt'.format(i)) for i in range(151)]
+    all_words = [get_words(filename) for filename in filename_list]
+    
+    if feature_method == "high_freq":
+        # 高频词特征
+        top_words = get_top_words(top_num, all_words)
+        vector = []
+        for words in all_words:
+            word_map = list(map(lambda word: words.count(word), top_words))
+            vector.append(word_map)
+        vector = np.array(vector)
+    elif feature_method == "tfidf":
+        # TF-IDF加权特征
+        documents = [" ".join(words) for words in all_words]
+        vectorizer = TfidfVectorizer(max_features=top_num)
+        vector = vectorizer.fit_transform(documents).toarray()
+        top_words = vectorizer.get_feature_names_out()
+    else:
+        raise ValueError("Invalid feature_method. Choose 'high_freq' or 'tfidf'.")
+    
+    return vector, top_words
 
-vector = np.array(vector)
-# 0-126.txt为垃圾邮件标记为1；127-151.txt为普通邮件标记为0
+# 构建特征向量和标签
+feature_method = "tfidf"  # 可切换为 "high_freq" 或 "tfidf"
+vector, top_words = build_features(feature_method, top_num=100)
 labels = np.array([1]*127 + [0]*24)
+
+# 训练模型
 model = MultinomialNB()
 model.fit(vector, labels)
 
 def predict(filename):
     """对未知邮件分类"""
-    # 构建未知邮件的词向量
     words = get_words(filename)
-    current_vector = np.array(
-        tuple(map(lambda word: words.count(word), top_words)))
-    # 预测结果
+    if feature_method == "high_freq":
+        current_vector = np.array(
+            tuple(map(lambda word: words.count(word), top_words)))
+    elif feature_method == "tfidf":
+        document = " ".join(words)
+        vectorizer = TfidfVectorizer(vocabulary=top_words)
+        current_vector = vectorizer.fit_transform([document]).toarray()[0]
+    else:
+        raise ValueError("Invalid feature_method. Choose 'high_freq' or 'tfidf'.")
+    
     result = model.predict(current_vector.reshape(1, -1))
     return '垃圾邮件' if result == 1 else '普通邮件'
 
