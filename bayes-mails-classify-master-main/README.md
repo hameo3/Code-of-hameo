@@ -26,6 +26,7 @@ feature_mode = "tfidf"  # 可选值："high_freq" 或 "tfidf"
 
 ### 数学公式示例
 贝叶斯公式：
-$$
+
+```math
 P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}
-$$
+```
