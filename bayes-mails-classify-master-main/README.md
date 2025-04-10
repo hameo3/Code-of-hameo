@@ -22,7 +22,7 @@ feature_mode = "tfidf"  # 可选值："high_freq" 或 "tfidf"
 
 以下为运行结果示例：
 
-<img src="https://github.com/hameo3/Code-of-hameo/blob/main/images/bayes.png" alt="贝叶斯" width="600">
+<img src="https://github.com/hameo3/Code-of-hameo/blob/main/images/bayes.png" alt="贝叶斯" width="1000">
 
 ### 数学公式示例
 贝叶斯公式：
